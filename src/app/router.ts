@@ -1,68 +1,40 @@
-import { IncomingMessage, STATUS_CODES } from 'http';
+import { IncomingMessage } from 'http';
 import { UsersApiService } from './api/users-api-service.ts';
-import { validate } from 'uuid';
-
-interface Result {
-  statusCode: number;
-  message: any;
-}
+import { Result } from './model/result.ts';
+import { UsersController } from './controller/users-controller.ts';
+import { UserController } from './controller/user-controller.ts';
 
 export class Router {
   usersApiService = new UsersApiService();
 
+  usersController = new UsersController().usersController;
+  controllerForUser = new UserController().controllerForUser;
+
   defineRoute(request: IncomingMessage, body: any): Result {
-    if (request.url === '/api/users' && request.method === 'POST') {
-      console.log(body);
-      const res = this.usersApiService.postUsers(body);
-      return { statusCode: 201, message: res };
-    } else if (request.url === '/api/users' && request.method === 'GET') {
-      const res = this.usersApiService.getUsers();
-      return { statusCode: 200, message: res };
+    const { method, url } = request;
+    if (!method) {
+      return { statusCode: 400, message: 'Method not found' };
+    }
+    if (url === '/api/users') {
+      return this.getHandlerFromController(method, this.usersController)({ body });
     } else if (
-      request.url?.startsWith('/api/users') &&
-      request.url.split('/api/users').length === 2 &&
-      request.method === 'GET'
+      url?.startsWith('/api/users') &&
+      url.split('/api/users').length === 2
     ) {
-      const id = this.getId(request.url);
-      const isIdValid = validate(id);
-      if (!isIdValid) {
-        return { statusCode: 400, message: 'Not uuid' };
-      }
-      const res = this.usersApiService.getUserById(id);
-      return { statusCode: 200, message: res };
-    } else if (
-      request.url?.startsWith('/api/users') &&
-      request.url.split('/api/users').length === 2 &&
-      request.method === 'PUT'
-    ) {
-      const id = this.getId(request.url);
-      const isIdValid = validate(id);
-      if (!isIdValid) {
-        return { statusCode: 400, message: 'Not uuid' };
-      }
-      const res = this.usersApiService.updateUser(id, body);
-      return { statusCode: 200, message: res };
-    } else if (
-      request.url?.startsWith('/api/users') &&
-      request.url.split('/api/users').length === 2 &&
-      request.method === 'DELETE'
-    ) {
-      const id = this.getId(request.url);
-      const isIdValid = validate(id);
-      if (!isIdValid) {
-        return { statusCode: 400, message: 'Not uuid' };
-      }
-      const res = this.usersApiService.deleteUser(id);
-      if (res === true) {
-        return { statusCode: 200, message: 'Yay! User deleted FOREVER!' };
-      }
-      return { statusCode: 404, message: `User with id ${id} doesn't exist` };
+      return this.getHandlerFromController(
+        method,
+        this.controllerForUser
+      )({ body, url });
     } else {
       return { statusCode: 404, message: 'Not Found' };
     }
   }
 
-  getId(url: string){
-    return url.split('/api/users')[1].slice(1);
+  getHandlerFromController(method: string, controller: Record<string, any>) {
+    const controllerMethod = controller[method];
+    if (controllerMethod) {
+      return controllerMethod;
+    }
+    return () => ({ statusCode: 400, message: 'Method not found' });
   }
 }
