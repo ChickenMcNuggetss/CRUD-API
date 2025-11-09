@@ -6,7 +6,7 @@ import { User } from '../model/user.ts';
 export class UsersApiService {
   private info = db;
 
-  postUsers(body: User) {
+  public postUsers(body: User) {
     const newUser: User = {
       ...body,
       id: uuidv4(),
@@ -15,15 +15,15 @@ export class UsersApiService {
     return newUser;
   }
 
-  getUsers() {
+  public getUsers() {
     return this.info.users;
   }
 
-  getUserById(id: string) {
+  public getUserById(id: string) {
     return this.info.users.find((user) => user.id === id);
   }
 
-  updateUser(id: string, body: any) {
+  public updateUser(id: string, body: any) {
     let updatedRecord;
     this.info.users.map((user, userIndex) => {
       if (user.id === id) {
@@ -35,7 +35,7 @@ export class UsersApiService {
     return updatedRecord;
   }
 
-  deleteUser(id: string) {
+  public deleteUser(id: string) {
     const userIndex = this.info.users.findIndex((user) => user.id === id);
     if (userIndex === -1) {
       return false;

@@ -5,12 +5,10 @@ import { UsersController } from './controller/users-controller.ts';
 import { UserController } from './controller/user-controller.ts';
 
 export class Router {
-  usersApiService = new UsersApiService();
+  private usersController = new UsersController().usersController;
+  private controllerForUser = new UserController().controllerForUser;
 
-  usersController = new UsersController().usersController;
-  controllerForUser = new UserController().controllerForUser;
-
-  defineRoute(request: IncomingMessage, body: any): Result {
+  public defineRoute(request: IncomingMessage, body: any): Result {
     const { method, url } = request;
     if (!method) {
       return { statusCode: 400, message: 'Method not found' };
@@ -30,7 +28,7 @@ export class Router {
     }
   }
 
-  getHandlerFromController(method: string, controller: Record<string, any>) {
+  private getHandlerFromController(method: string, controller: Record<string, any>) {
     const controllerMethod = controller[method];
     if (controllerMethod) {
       return controllerMethod;

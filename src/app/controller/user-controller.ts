@@ -4,9 +4,9 @@ import { getId } from '../utils/getId.ts';
 import { validate } from 'uuid';
 
 export class UserController {
-  usersApiService = new UsersApiService();
+  private usersApiService = new UsersApiService();
 
-  controllerForUser: ControllerType = {
+  public controllerForUser: ControllerType = {
     GET: ({ url }) => {
       const id = getId(url);
       const isIdValid = validate(id);
