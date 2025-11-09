@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "nodenext", // or "nodenext"
+    "module": "nodenext",
     "moduleResolution": "NodeNext",
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
