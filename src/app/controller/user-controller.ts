@@ -38,11 +38,4 @@ export class UserController {
       return { statusCode: 404, message: `User with id ${id} doesn't exist` };
     },
   };
-
-  checkRequiredFields({ body }: { body: any }) {
-    const requiredFields = ['username', 'age', 'hobbies'];
-    return Object.keys(body).every((field) => {
-      requiredFields.includes(field);
-    });
-  }
 }
