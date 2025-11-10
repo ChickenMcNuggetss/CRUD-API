@@ -27,7 +27,7 @@ npm install
 1. Start the server:
 
 ```
-npm run start
+npm run start:prod
 ```
 
 ## API endpoints
