@@ -22,7 +22,7 @@ const server = http.createServer((request, response) => {
       response.end(JSON.stringify(result?.message));
     } catch (err) {
       response.writeHead(400, { 'Content-Type': 'application/json' });
-      console.log(214, err);
+      console.log(`The error is: ${err}`);
       response.end(JSON.stringify({ error: 'Invalid JSON' }));
     }
   });

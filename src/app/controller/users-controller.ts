@@ -7,7 +7,7 @@ export class UsersController {
 
   public usersController: ControllerType = {
     POST: ({ body }: { body: any }) => {
-      if (!checkRequiredFields(body)) {
+      if (!checkRequiredFields({ body })) {
         return { statusCode: 400, message: 'Request body does not contain required fields' };
       }
       const res = this.usersApiService.postUsers(body);
