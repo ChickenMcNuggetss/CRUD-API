@@ -14,6 +14,9 @@ export class UserController {
         return { statusCode: 400, message: 'Not uuid' };
       }
       const res = this.usersApiService.getUserById(id);
+      if (!res) {
+        return { statusCode: 404, message: `User with id ${id} doesn't exist` };
+      }
       return { statusCode: 200, message: res };
     },
     PUT: ({ body, url }) => {
@@ -23,6 +26,9 @@ export class UserController {
         return { statusCode: 400, message: 'Not uuid' };
       }
       const res = this.usersApiService.updateUser(id, body);
+      if(!res) {
+        return { statusCode: 404, message: `User with id ${id} doesn't exist` };
+      }
       return { statusCode: 200, message: res };
     },
     DELETE: ({ url }) => {
@@ -33,7 +39,7 @@ export class UserController {
       }
       const res = this.usersApiService.deleteUser(id);
       if (res === true) {
-        return { statusCode: 200, message: 'Yay! User deleted FOREVER!' };
+        return { statusCode: 204, message: 'Yay! User deleted FOREVER!' };
       }
       return { statusCode: 404, message: `User with id ${id} doesn't exist` };
     },
