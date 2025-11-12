@@ -15,7 +15,7 @@ export class Router {
     }
     if (url === '/api/users') {
       return this.getHandlerFromController(method, this.usersController)({ body });
-    } else if (url?.startsWith('/api/users') && url.split('/api/users').length === 2) {
+    } else if (url?.startsWith('/api/users') && url.split('/api/users').length === 2 && url.split('/api/users')[1]?.startsWith('/')) {
       return this.getHandlerFromController(method, this.controllerForUser)({ body, url });
     } else {
       return { statusCode: 404, message: 'Not Found' };
